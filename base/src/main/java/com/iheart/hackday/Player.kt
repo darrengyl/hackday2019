@@ -38,14 +38,14 @@ class Player {
     fun skipAhead30Secs() {
         val futureProgress = progressInMilliSec + 30000
         if (futureProgress < durationInMilliSec) {
-            seekTo(futureProgress)
+            mediaPlayer.seekTo(futureProgress)
         }
     }
 
     fun goBack15Secds() {
         val pastProgress = progressInMilliSec - 15000
         if (pastProgress < durationInMilliSec) {
-            seekTo(pastProgress)
+            mediaPlayer.seekTo(pastProgress)
         }
     }
 
