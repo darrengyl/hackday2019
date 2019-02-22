@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/introView"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+    <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieView"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            app:lottie_rawRes="@raw/lottie_intro_anim"
+            app:lottie_autoPlay="true"/>
+</FrameLayout>

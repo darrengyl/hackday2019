@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_height="match_parent">
+
+    <ImageView
+            android:id="@+id/cover"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:alpha="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintTop_toBottomOf="@+id/iHeartLogo" android:layout_marginTop="58dp"/>
+
+    <ImageView
+            android:id="@+id/shareIcon"
+            android:src="@android:drawable/ic_menu_share"
+            android:alpha="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="34dp"/>
+
+    <ImageView android:id="@+id/close"
+               android:alpha="1"
+               android:layout_width="wrap_content" android:layout_height="wrap_content"
+               app:srcCompat="@drawable/ic_arrow_down_24dp"
+               app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="34dp"
+               app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"/>
+
+    <TextView
+            android:id="@+id/podcastName"
+            android:alpha="1"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="34dp" app:layout_constraintStart_toEndOf="@+id/close"
+            android:layout_marginStart="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="title"/>
+    <TextView
+            android:text="Podcast"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+
+            app:layout_constraintStart_toStartOf="@+id/podcastName"
+            app:layout_constraintTop_toBottomOf="@+id/podcastName" android:id="@+id/textView"/>
+
+    <ImageView
+            android:id="@+id/iHeartLogo"
+            android:alpha="1"
+
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.498" app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:layout_marginTop="34dp"
+            app:srcCompat="@drawable/ic_ihr_logo"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+
+            android:id="@+id/episodeName" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Episode Name"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="14dp" app:layout_constraintTop_toBottomOf="@+id/installButton"/>
+    <TextView
+            android:text="TextView"
+            android:alpha="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:id="@+id/artistiName" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/episodeName" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+    <SeekBar
+            android:layout_width="0dp"
+            android:alpha="1"
+
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintTop_toBottomOf="@+id/artistiName"
+            android:layout_marginTop="16dp"/>
+
+    <Button
+            android:text="Install App"
+            android:alpha="1"
+
+            android:layout_width="144dp"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textColor="#E22C3A"
+            android:background="@drawable/rounded_corner_rectangle"
+            android:id="@+id/installButton" android:layout_marginTop="26dp"
+            app:layout_constraintTop_toBottomOf="@+id/cover" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/playButton"
+            android:alpha="1"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabCustomSize="50dp"
+            app:backgroundTint="@color/white"
+            app:srcCompat="@drawable/ic_play"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498" android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/white"
+            app:fabCustomSize="44dp"
+            android:alpha="1"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rewind" app:layout_constraintEnd_toStartOf="@+id/playButton"
+            android:layout_marginEnd="102dp"
+            app:srcCompat="@drawable/ic_back_15"
+            app:layout_constraintTop_toTopOf="@+id/playButton"
+            app:layout_constraintBottom_toBottomOf="@+id/playButton"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/white"
+            android:alpha="1"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabCustomSize="44dp"
+            android:id="@+id/forward" app:layout_constraintStart_toEndOf="@+id/playButton"
+            android:layout_marginStart="102dp"
+            app:srcCompat="@drawable/ic_forward_30"
+            app:layout_constraintTop_toTopOf="@+id/playButton"
+            app:layout_constraintBottom_toBottomOf="@+id/playButton"/>
+
+    <include
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            layout="@layout/view_intro"
+            tools:visibility="gone" android:id="@+id/include"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
