@@ -1,8 +1,12 @@
 package com.iheart.hackday
 
 import android.animation.Animator
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -16,6 +20,12 @@ import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+import com.cleveroad.audiovisualization.AudioVisualization
+import com.cleveroad.audiovisualization.DbmHandler
+import com.cleveroad.audiovisualization.GLAudioVisualizationView
+import com.cleveroad.audiovisualization.SpeechRecognizerDbmHandler
+import com.squareup.picasso.Callback
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,11 +33,14 @@ class MainActivity : AppCompatActivity() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val mHandler = Handler()
+    private var speechRecognizerDbmHandler: SpeechRecognizerDbmHandler? = null
 
     private val scheduler = Executors.newScheduledThreadPool(1)
 
     private var scheduledFuture: ScheduledFuture<Any>? = null
+
+    private var audioVisualization: AudioVisualization? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +53,12 @@ class MainActivity : AppCompatActivity() {
         val seekBar = findViewById<SeekBar>(R.id.seekBar)
         val rewindButton = findViewById<FloatingActionButton>(R.id.rewind)
         val forwardButton = findViewById<FloatingActionButton>(R.id.forward)
+        audioVisualization = findViewById<GLAudioVisualizationView>(R.id.visualizerView) as AudioVisualization
 
+        speechRecognizerDbmHandler = DbmHandler.Factory.newSpeechRecognizerHandler(this).apply {
+            audioVisualization!!.linkTo(this)
+
+        }
         lottieView.addAnimatorListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
             }
@@ -58,7 +76,14 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel = ViewModelProviders.of(this).get(PodcastViewModel::class.java)
-        viewModel.setIntent(intent.data)
+        viewModel.setIntent(intent.data).subscribe({
+            episodeName.text = it.title
+
+            //artistiName.text = it.description
+            Picasso.Builder(this).listener { picasso, uri, exception -> exception.printStackTrace() }.loggingEnabled(true).build()
+                .load(Uri.parse(it.imageUrl))
+                .into(coverImageView)
+        }, { Log.d("Error", it.localizedMessage)})
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -83,8 +108,44 @@ class MainActivity : AppCompatActivity() {
             if (viewModel.isPlaying()) {
                 viewModel.stop()
                 playButton.setImageResource(R.drawable.ic_play)
+                speechRecognizerDbmHandler!!.stopListening()
             } else {
                 viewModel.play()
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, packageName)
+                }
+                speechRecognizerDbmHandler!!.innerRecognitionListener(object: RecognitionListener{
+                    override fun onReadyForSpeech(params: Bundle?) {
+
+                    }
+
+                    override fun onRmsChanged(rmsdB: Float) {
+                    }
+
+                    override fun onBufferReceived(buffer: ByteArray?) {
+                    }
+
+                    override fun onPartialResults(partialResults: Bundle?) {
+                    }
+
+                    override fun onEvent(eventType: Int, params: Bundle?) {
+                    }
+
+                    override fun onBeginningOfSpeech() {
+                    }
+
+                    override fun onEndOfSpeech() {
+                    }
+
+                    override fun onError(error: Int) {
+                    }
+
+                    override fun onResults(results: Bundle?) {
+                    }
+
+                })
+                speechRecognizerDbmHandler!!.startListening(intent)
                 playButton.setImageResource(R.drawable.ic_pause)
             }
         }
@@ -100,23 +161,27 @@ class MainActivity : AppCompatActivity() {
                 viewModel.skipAhead30Secs()
             }
         }
+    }
 
-        viewModel.podcastInfoObservable().subscribe {
-            episodeName.text = it.title
+    override fun onResume() {
+        super.onResume()
+        audioVisualization?.onResume()
+    }
 
-            //artistiName.text = it.description
-            Picasso.Builder(this).loggingEnabled(true).build()
-                .load(it.imageUrl)
-                .into(coverImageView)
-        }
-
-
+    override fun onPause() {
+        audioVisualization?.onPause()
+        super.onPause()
     }
 
     override fun onStop() {
         compositeDisposable.clear()
         scheduledFuture?.cancel(true)
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        audioVisualization?.release()
+        super.onDestroy()
     }
 //    fun animate() {
 //        val set = ConstraintSet()

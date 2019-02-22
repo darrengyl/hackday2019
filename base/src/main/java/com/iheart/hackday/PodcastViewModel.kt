@@ -4,8 +4,10 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
@@ -27,23 +29,16 @@ class PodcastViewModel : ViewModel() {
     private val podcastEpisodeSubject = BehaviorSubject.create<PodcastEpisode>()
     //private val isPlayingSubject = BehaviorSubject.create<Boolean>()
 
-    private val compositeDisposable = CompositeDisposable()
+    private var disposable: Disposable? = null
 
-    fun setIntent(uri: Uri?) {
-        LoadPodcastEpisode().invoke(getIdFromIntent(uri))
+    fun setIntent(uri: Uri?): Single<PodcastEpisode> {
+        return LoadPodcastEpisode().invoke(getIdFromIntent(uri))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    podcastEpisodeSubject.onNext(it)
-                    player.setPodastStreamUrl(it.streamUrl)
-                    //play()
-                },
-                { Log.d("TEST", it.toString()) })
-            .also { compositeDisposable.add(it) }
+            .doOnSuccess{ player.setPodastStreamUrl(it.streamUrl) }
     }
 
-    fun podcastInfoObservable(): Observable<PodcastEpisode> = podcastEpisodeSubject
+    //fun podcastInfoObservable(): Observable<PodcastEpisode> = podcastEpisodeSubject
 
     fun isPlaying(): Boolean = player.isPlaying()
 
@@ -70,7 +65,7 @@ class PodcastViewModel : ViewModel() {
     }
 
     private fun getIdFromIntent(uri: Uri?): Long {
-        return uri
+        return (uri ?: Uri.parse(deeplink))
             ?.let { regex.find(it.lastPathSegment) }
             ?.value.toString().substring(1)
             .toLong()
@@ -78,6 +73,5 @@ class PodcastViewModel : ViewModel() {
 
     override fun onCleared() {
         stop()
-        compositeDisposable.clear()
     }
 }

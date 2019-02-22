@@ -7,6 +7,19 @@
         android:background="@color/colorPrimary"
         android:layout_height="match_parent">
 
+    <com.cleveroad.audiovisualization.GLAudioVisualizationView
+        android:id="@+id/visualizerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:av_bubblesSize="4dp"
+        app:av_bubblesRandomizeSizes="true"
+        app:av_wavesHeight="24dp"
+        app:av_wavesFooterHeight="24dp"
+        app:av_wavesCount="7"
+        app:av_layersCount="4"
+        app:av_backgroundColor="@color/av_color_bg"
+        app:av_bubblesPerLayer="16" />
+
     <ImageView
             android:id="@+id/cover"
             android:layout_width="240dp"
