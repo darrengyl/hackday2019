@@ -68,5 +68,5 @@ class PodcastApi {
                 streamUrl = it.episode.mediaUrl.orEmpty()) }
     }
 
-    private fun createImageUrl(id: Long): String = "http://i.iheart.com/v3/catalog/episode/$id"
+    private fun createImageUrl(id: Long): String = "https://i.iheart.com/v3/catalog/episode/$id"
 }
