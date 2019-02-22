@@ -1,6 +1,7 @@
 package com.iheart.hackday
 
 import android.media.MediaPlayer
+import android.util.Log
 
 /**
  * Created by Jonathan Muller on 2/21/19.
@@ -10,30 +11,51 @@ const val testUrl = "https://dts.podtrac.com/redirect.mp3/traffic.libsyn.com/sec
 
 class Player {
 
-    private var isInitialized = false
-
     private val mediaPlayer = MediaPlayer()
 
     fun setPodastStreamUrl(streamUrl: String) {
-        if (!isInitialized) {
-            mediaPlayer.setDataSource(streamUrl)
-            mediaPlayer.prepare()
-            isInitialized = true
-        }
+        mediaPlayer.setDataSource(streamUrl)
+        mediaPlayer.prepareAsync()
     }
 
     fun play() {
         mediaPlayer.start()
     }
 
+    fun isPlaying() = mediaPlayer.isPlaying
+
     fun stop() {
-        mediaPlayer.stop()
+        mediaPlayer.pause()
     }
 
-    val duration: Int
-        get() = mediaPlayer.duration / 1000 / 60
+    fun seekTo(positionProgress: Int) {
+        val newPosition = positionProgress * durationInMilliSec / 100
+        if (newPosition < durationInMilliSec) {
+            mediaPlayer.seekTo(newPosition)
+        }
+    }
+
+    fun skipAhead30Secs() {
+        val futureProgress = progressInMilliSec + 30000
+        if (futureProgress < durationInMilliSec) {
+            seekTo(futureProgress)
+        }
+    }
+
+    fun goBack15Secds() {
+        val pastProgress = progressInMilliSec - 15000
+        if (pastProgress < durationInMilliSec) {
+            seekTo(pastProgress)
+        }
+    }
+
+    val durationInMilliSec: Int
+        get() = mediaPlayer.duration
+
+    val progressInMilliSec: Int
+        get() = mediaPlayer.currentPosition
 
     val progress: Int
-        get() = mediaPlayer.currentPosition / 1000 / 60
+        get() = mediaPlayer.currentPosition * 100 / mediaPlayer.duration
 
 }

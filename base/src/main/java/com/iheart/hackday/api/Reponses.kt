@@ -27,7 +27,7 @@ class Episode(
     val podcastSlug: String?,
     @field:SerializedName("title")
     val title: String?,
-    @field:SerializedName("duration")
+    @field:SerializedName("durationInMilliSec")
     val duration: Int?,
     @field:SerializedName("secondsPlayed")
     val progress: Int?,
